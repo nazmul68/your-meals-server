@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 
 // middleware
@@ -40,6 +40,14 @@ async function run() {
       const cursor = foodsCollection.find(query);
       const limFoods = await cursor.toArray();
       res.send(limFoods);
+    });
+
+    // get specific food by id API
+    app.get("/allFoods/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const food = await foodsCollection.findOne(query);
+      res.send(food);
     });
   } catch (error) {
     console.log(error);
