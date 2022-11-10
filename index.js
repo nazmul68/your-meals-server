@@ -26,10 +26,19 @@ async function run() {
     const foodsCollection = client.db("YourMeals").collection("Foods");
 
     // Foods API
+    //limited foods API
     app.get("/limFoods", async (req, res) => {
       const query = {};
       const cursor = foodsCollection.find(query);
       const limFoods = await cursor.limit(3).toArray();
+      res.send(limFoods);
+    });
+
+    // all foods API
+    app.get("/allFoods", async (req, res) => {
+      const query = {};
+      const cursor = foodsCollection.find(query);
+      const limFoods = await cursor.toArray();
       res.send(limFoods);
     });
   } catch (error) {
