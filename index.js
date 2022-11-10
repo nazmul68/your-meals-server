@@ -25,25 +25,25 @@ async function run() {
   try {
     const foodsCollection = client.db("YourMeals").collection("Foods");
 
-    // Foods API
-    //limited foods API
-    app.get("/limFoods", async (req, res) => {
+    // Meals API
+    //limited meals API
+    app.get("/limMeals", async (req, res) => {
       const query = {};
       const cursor = foodsCollection.find(query);
       const limFoods = await cursor.limit(3).toArray();
       res.send(limFoods);
     });
 
-    // all foods API
-    app.get("/allFoods", async (req, res) => {
+    // all meals API
+    app.get("/allMeals", async (req, res) => {
       const query = {};
       const cursor = foodsCollection.find(query);
       const limFoods = await cursor.toArray();
       res.send(limFoods);
     });
 
-    // get specific food by id API
-    app.get("/allFoods/:id", async (req, res) => {
+    // get specific meal by id API
+    app.get("/allMeals/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const food = await foodsCollection.findOne(query);
