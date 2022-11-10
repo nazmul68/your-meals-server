@@ -21,4 +21,21 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
+async function run() {
+  try {
+    const foodsCollection = client.db("YourMeals").collection("Foods");
+
+    // Foods API
+    app.get("/limFoods", async (req, res) => {
+      const query = {};
+      const cursor = foodsCollection.find(query);
+      const limFoods = await cursor.limit(3).toArray();
+      res.send(limFoods);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+run().catch((err) => console.error(err));
+
 app.listen(port, () => console.log(`YourMeals app listening on port ${port}`));
