@@ -24,6 +24,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const foodsCollection = client.db("YourMeals").collection("Foods");
+    const reviewsCollection = client.db("YourMeals").collection("reviews");
 
     // Meals API
     //limited meals API
@@ -45,9 +46,18 @@ async function run() {
     // get specific meal by id API
     app.get("/allMeals/:id", async (req, res) => {
       const id = req.params.id;
+      //   console.log(id);
       const query = { _id: ObjectId(id) };
       const food = await foodsCollection.findOne(query);
       res.send(food);
+    });
+
+    // reviews
+    app.post("/reviews", async (req, res) => {
+      const reviews = req.body;
+      //   console.log(reviews);
+      const result = await reviewsCollection.insertOne(reviews);
+      res.send(result);
     });
   } catch (error) {
     console.log(error);
