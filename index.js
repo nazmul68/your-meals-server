@@ -30,7 +30,7 @@ async function run() {
     //limited meals API
     app.get("/limMeals", async (req, res) => {
       const query = {};
-      const cursor = foodsCollection.find(query);
+      const cursor = foodsCollection.find(query).sort({ _id: -1 });
       const limFoods = await cursor.limit(3).toArray();
       res.send(limFoods);
     });
@@ -38,7 +38,7 @@ async function run() {
     // all meals API
     app.get("/allMeals", async (req, res) => {
       const query = {};
-      const cursor = foodsCollection.find(query);
+      const cursor = foodsCollection.find(query).sort({ _id: -1 });
       const limFoods = await cursor.toArray();
       res.send(limFoods);
     });
@@ -50,6 +50,13 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const food = await foodsCollection.findOne(query);
       res.send(food);
+    });
+
+    app.post("/postMeal", async (req, res) => {
+      const meal = req.body;
+      // console.log(meal);
+      const result = await foodsCollection.insertOne(meal);
+      res.send(result);
     });
 
     // reviews API
