@@ -107,12 +107,12 @@ async function run() {
     app.put("/myReviews/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
-      const storedReview = req.body;
-      console.log(storedReview);
+      const updateReview = req.body;
+      // console.log(storedReview);
       const options = { upsert: true };
       const updatedReview = {
         $set: {
-          review: storedReview.review,
+          review: updateReview.review,
         },
       };
       const result = await reviewsCollection.updateOne(
@@ -120,7 +120,7 @@ async function run() {
         updatedReview,
         options
       );
-      console.log(result);
+      // console.log(result);
       res.send(result);
     });
   } catch (error) {
