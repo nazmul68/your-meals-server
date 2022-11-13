@@ -52,11 +52,46 @@ async function run() {
       res.send(food);
     });
 
-    // reviews
+    // reviews API
     app.post("/reviews", async (req, res) => {
       const reviews = req.body;
-      //   console.log(reviews);
+      // console.log(reviews);
       const result = await reviewsCollection.insertOne(reviews);
+      res.send(result);
+    });
+
+    app.get("/reviewsByIds", async (req, res) => {
+      let query = {};
+
+      if (req.query.id) {
+        query = {
+          mealId: req.query.id,
+        };
+      }
+      const cursor = reviewsCollection.find(query).sort({ _id: -1 });
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/myReviews", async (req, res) => {
+      let query = {};
+      // console.log(req.query.email);
+      if (req.query.email) {
+        query = {
+          userEmail: req.query.email,
+        };
+      }
+      const cursor = reviewsCollection.find(query).sort({ _id: -1 });
+      const myReviews = await cursor.toArray();
+      res.send(myReviews);
+    });
+
+    app.delete("/myReviews/:id", async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const query = { _id: ObjectId(id) };
+      const result = await reviewsCollection.deleteOne(query);
+      // console.log(result);
       res.send(result);
     });
   } catch (error) {
