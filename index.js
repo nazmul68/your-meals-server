@@ -86,12 +86,41 @@ async function run() {
       res.send(myReviews);
     });
 
+    app.get("/myReviews/:id", async (req, res) => {
+      const id = req.params.id;
+      let query = { _id: ObjectId(id) };
+
+      const cursor = reviewsCollection.find(query).sort({ _id: -1 });
+      const myReviews = await cursor.toArray();
+      res.send(myReviews);
+    });
+
     app.delete("/myReviews/:id", async (req, res) => {
       const id = req.params.id;
       // console.log(id);
       const query = { _id: ObjectId(id) };
       const result = await reviewsCollection.deleteOne(query);
       // console.log(result);
+      res.send(result);
+    });
+
+    app.put("/myReviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const storedReview = req.body;
+      console.log(storedReview);
+      const options = { upsert: true };
+      const updatedReview = {
+        $set: {
+          review: storedReview.review,
+        },
+      };
+      const result = await reviewsCollection.updateOne(
+        filter,
+        updatedReview,
+        options
+      );
+      console.log(result);
       res.send(result);
     });
   } catch (error) {
